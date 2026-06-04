@@ -1,0 +1,3 @@
+- make allnoconfig
+- make tinyconfig
+- make localmodconfig
