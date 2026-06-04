@@ -1,6 +1,6 @@
 # <div align="center">🐙 Distribuição Cthun 🪼 </div>
 
-### <p align="center">⛩ ⟢ Uma distribuição feita do zero ⟢ ⛩</p>
+### <p align="center">⛩ ⟢ Uma distribuição feita por Boaventura ⟢ ⛩</p>
 
 ## Objetivos ඞᝰ.ᐟ
 
