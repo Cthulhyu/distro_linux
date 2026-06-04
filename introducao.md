@@ -1,4 +1,4 @@
-# <div align="center>"🐙 Distribuição Cthun 🪼 </div>
+# <div align="center">🐙 Distribuição Cthun 🪼 </div>
 
 ### <p align="center">⛩ ⟢ Uma distribuição feita do zero ⟢ ⛩</p>
 
