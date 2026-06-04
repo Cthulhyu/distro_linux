@@ -2,7 +2,7 @@
 
 ### <p align="center">⛩ ⟢ Uma distribuição feita do zero ⟢ ⛩</p>
 
-## Objetivos ᝰ.ᐟඞ
+## Objetivos ඞᝰ.ᐟ
 
 - Desenvolver uma distro voltada para programação em PIC e verificação de hardwares externos.
 - Facilitar a dinamica de programação misturada com monitoramento de processos utilizando RTOS.
