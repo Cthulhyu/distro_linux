@@ -4,4 +4,4 @@
  
  ⤿teremos o passo a passo do codigo para a construção -codigo.md
  
- ⤿A distribuição será a explicação por gráfico de cada etapa, do alimentar a maquina até os parametros de nivel alto e abstrato -distribuicao.md.
+ ⤿A distribuição será a explicação por gráfico de cada etapa, do alimentar a maquina até os parametros de nivel alto e abstrato  -distribuicao.md.
