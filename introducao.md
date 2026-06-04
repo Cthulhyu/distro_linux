@@ -1,6 +1,6 @@
 # 🐙 Distribuição Cthun 🪼
 
-<p align="center">--Uma distribuição feita do zero--</p>
+<p align="center">⛩ ⟢Uma distribuição feita do zero⟢ ⛩</p>
 
 ## Objetivos
 
