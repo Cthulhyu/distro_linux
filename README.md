@@ -1,7 +1,9 @@
 # Distribuição 
 ### Projeto voltado para o aperfeiçoamento e aprimoramento dos conhecimentos em diversas áreas da computação.
- ⤿A introdução mostrará o objetivo e premissa da aplicação -introducao.md
+ ⤿A introdução mostrará o objetivo e premissa da aplicação: **-introducao.md-**
  
- ⤿teremos o passo a passo do codigo para a construção -codigo.md
+ ⤿Teremos o passo a passo do codigo para a construção: **-codigo.md-**
+
+ ⤿Todo o fundcionamento do computador, hardware e software: **-computador-**
  
- ⤿A distribuição será a explicação por gráfico de cada etapa, do alimentar a maquina até os parametros de nivel alto e abstrato  -distribuicao.md.
+ ⤿Conceitos de distribuições linux e seu funcionamento: **-conceito_distro_linux.md-**
