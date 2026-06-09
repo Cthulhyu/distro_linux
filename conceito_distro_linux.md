@@ -1,6 +1,6 @@
 # <div align="center">🐧Distribuição Linux na Computação ˙𐃷˙</div>
 
-## Introdução
+## <div align="center">Introdução</div>
 
 Uma distribuição Linux (distro) é a união de diversos componentes de software que trabalham sobre o hardware do computador.
 
