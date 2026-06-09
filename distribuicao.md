@@ -1,476 +1,803 @@
-# Processo Completo de Inicialização do Sistema
+# Funcionamento Completo de um Computador
 
-## Visão Geral
-
-O processo de inicialização da distribuição é dividido em diversas etapas, desde a energização do hardware até a exibição do ambiente gráfico para o usuário.
-
-```text
-Hardware
-↓
-BIOS/UEFI
-↓
-Bootloader (GRUB)
-↓
-Kernel Linux
-↓
-Initramfs
-↓
-RootFS
-↓
-Sistema de Inicialização (PID 1)
-↓
-Serviços do Sistema
-↓
-Login Manager
-↓
-Wayland
-↓
-Hyprland
-↓
-Aplicações
-```
+## Do Hardware ao Sistema Operacional
 
 ---
 
-# 1. BIOS / UEFI
+# Sumário
 
-A BIOS (Basic Input Output System) ou UEFI (Unified Extensible Firmware Interface) é responsável por preparar o hardware para execução do sistema operacional.
+1. Introdução
+2. Arquitetura Geral
+3. Hardware
 
-## Responsabilidades
+   * Placa-mãe
+   * CPU
+   * Cache
+   * RAM
+   * SSD e HD
+   * GPU
+4. Processo de Inicialização
+5. Firmware (BIOS/UEFI)
+6. Bootloader
+7. Kernel Linux
+8. Initramfs
+9. Gerenciamento de Memória
+10. Sistema de Arquivos
+11. Processos
+12. Systemd
+13. Ambiente Gráfico
+14. Fluxo Completo da Inicialização
 
-* Inicialização da CPU
-* Teste da memória RAM
-* Detecção de dispositivos PCIe
-* Inicialização de controladores SATA/NVMe
-* Configuração básica do chipset
-* Seleção do dispositivo de boot
+---
 
-## POST (Power-On Self Test)
+# Introdução
 
-Durante o POST o firmware verifica:
+Um computador é uma máquina eletrônica capaz de receber dados, processá-los, armazená-los e produzir resultados.
 
-* Processador
+Ele é composto por duas partes fundamentais:
+
+## Hardware
+
+Parte física do sistema:
+
+* Processador (CPU)
 * Memória RAM
+* SSD/HD
 * GPU
-* Teclado
-* Controladores de armazenamento
+* Placa-mãe
+* Fonte de alimentação
 
-Após a conclusão do POST o controle é transferido ao dispositivo de boot.
+## Software
+
+Parte lógica do sistema:
+
+* Firmware (UEFI/BIOS)
+* Kernel
+* Drivers
+* Bibliotecas
+* Aplicações
 
 ---
 
-# 2. Bootloader (GRUB)
+# Arquitetura Geral
 
-O GRUB é carregado pelo firmware e possui a responsabilidade de iniciar o kernel Linux.
+```mermaid
+flowchart TD
+    Usuario[Usuário]
+    Entrada[Dispositivos de Entrada]
+    SO[Sistema Operacional]
+    CPU[CPU]
+    RAM[RAM]
+    SSD[SSD]
+    GPU[GPU]
+    Monitor[Monitor]
 
-## Funções
-
-* Exibir menu de boot
-* Selecionar entradas do sistema
-* Carregar o kernel
-* Carregar o initramfs
-* Passar parâmetros para o kernel
-
-## Arquivos Principais
-
-```text
-/boot/grub/grub.cfg
-/boot/vmlinuz-linux
-/boot/initramfs-linux.img
+    Usuario --> Entrada
+    Entrada --> SO
+    SO --> CPU
+    CPU <--> RAM
+    CPU <--> SSD
+    CPU --> GPU
+    GPU --> Monitor
 ```
 
-## Parâmetros de Kernel
+---
+
+# Hardware
+
+## Placa-mãe
+
+A placa-mãe é a principal placa eletrônica do computador.
+
+Responsabilidades:
+
+* Interligar todos os componentes
+* Distribuir energia
+* Hospedar o firmware UEFI
+* Fornecer barramentos de comunicação
+
+### Principais Barramentos
+
+| Barramento | Função                 |
+| ---------- | ---------------------- |
+| PCIe       | GPU, SSD NVMe e placas |
+| SATA       | HDs e SSDs SATA        |
+| USB        | Periféricos            |
+| SPI        | Firmware UEFI          |
+| SMBus      | Sensores               |
+
+---
+
+## CPU (Central Processing Unit)
+
+A CPU é responsável pela execução das instruções.
+
+### Componentes Internos
+
+#### Unidade de Controle (CU)
+
+Coordena a execução das instruções.
+
+#### ALU (Arithmetic Logic Unit)
+
+Executa:
+
+* Soma
+* Subtração
+* Multiplicação
+* Divisão
+* Operações lógicas
+
+#### Registradores
+
+Memória ultrarrápida dentro da CPU.
 
 Exemplos:
 
+| Registrador | Função            |
+| ----------- | ----------------- |
+| RIP         | Próxima instrução |
+| RSP         | Pilha             |
+| RAX         | Dados gerais      |
+
+---
+
+## Pipeline
+
+Uma instrução passa por várias etapas:
+
+```mermaid
+flowchart LR
+    Fetch --> Decode
+    Decode --> Execute
+    Execute --> Memory
+    Memory --> WriteBack
+```
+
+### Fetch
+
+Busca a instrução na memória.
+
+### Decode
+
+Interpreta a instrução.
+
+### Execute
+
+Executa a operação.
+
+### Memory Access
+
+Acessa RAM se necessário.
+
+### Write Back
+
+Salva o resultado.
+
+---
+
+## Cache
+
+Memória extremamente rápida.
+
 ```text
-root=/dev/nvme0n1p2
-quiet
-loglevel=3
-rw
+Registradores
+      ↓
+Cache L1
+      ↓
+Cache L2
+      ↓
+Cache L3
+      ↓
+RAM
+```
+
+### L1
+
+Mais rápida.
+
+### L2
+
+Intermediária.
+
+### L3
+
+Compartilhada entre núcleos.
+
+---
+
+## RAM
+
+Memória principal do computador.
+
+Armazena:
+
+* Kernel
+* Programas em execução
+* Dados temporários
+
+Características:
+
+* Volátil
+* Alta velocidade
+* Apagada ao desligar
+
+---
+
+## SSD
+
+Armazenamento permanente.
+
+### SATA
+
+Até aproximadamente:
+
+550 MB/s
+
+### NVMe
+
+Utiliza PCI Express.
+
+Pode ultrapassar:
+
+* 3 GB/s
+* 7 GB/s
+* 14 GB/s
+
+---
+
+## GPU
+
+Processador especializado em paralelismo.
+
+Utilizado para:
+
+* Jogos
+* IA
+* Renderização
+* Processamento gráfico
+
+---
+
+# Processo de Inicialização
+
+## Energia
+
+Quando o botão Power é pressionado:
+
+```mermaid
+flowchart TD
+    AC[Tomada]
+    Fonte[Fonte ATX]
+    MB[Placa-mãe]
+
+    AC --> Fonte
+    Fonte --> MB
+```
+
+A fonte converte:
+
+```text
+Corrente Alternada (AC)
+↓
+Corrente Contínua (DC)
+```
+
+Fornecendo:
+
+* 12V
+* 5V
+* 3.3V
+
+---
+
+# Firmware
+
+## BIOS
+
+Sistema legado de inicialização.
+
+## UEFI
+
+Substituto moderno da BIOS.
+
+Responsável por:
+
+* Inicializar hardware
+* Detectar memória
+* Detectar discos
+* Executar bootloader
+
+---
+
+# POST
+
+Power-On Self Test
+
+Verificações realizadas:
+
+* CPU
+* RAM
+* GPU
+* Controladores
+
+```mermaid
+flowchart TD
+    POST --> Verificacao
+    Verificacao -->|Sucesso| Boot
+    Verificacao -->|Falha| Erro
 ```
 
 ---
 
-# 3. Kernel Linux
+# Treinamento da Memória
 
-O kernel é o núcleo do sistema operacional.
+O controlador de memória descobre:
 
-Após ser carregado pelo GRUB, o kernel assume controle total do hardware.
+* Frequência
+* Latência
+* Timings
 
-## Inicialização da CPU
+Exemplo:
 
-Configuração de:
+```text
+DDR5 6000 MT/s
+CL30
+```
 
-* Tabelas de interrupção
-* Modos de execução
-* Multiprocessamento SMP
+---
 
-## Gerenciamento de Memória
+# Seleção do Dispositivo de Boot
 
-Configuração de:
+UEFI procura dispositivos:
 
+1. SSD
+2. HD
+3. Pendrive
+4. Rede
+
+---
+
+# Partição EFI
+
+Estrutura típica:
+
+```text
+EFI/
+├── Microsoft/
+├── GRUB/
+├── systemd/
+└── Boot/
+```
+
+Formato:
+
+```text
+FAT32
+```
+
+---
+
+# Bootloader
+
+Exemplos:
+
+* GRUB
+* systemd-boot
+* rEFInd
+
+Funções:
+
+* Localizar kernel
+* Carregar initramfs
+* Passar parâmetros ao kernel
+
+---
+
+# Kernel Linux
+
+Arquivo típico:
+
+```text
+vmlinuz-linux
+```
+
+Responsabilidades:
+
+* Processos
+* Memória
+* Arquivos
+* Rede
+* Drivers
+
+---
+
+# Initramfs
+
+Sistema Linux temporário carregado na RAM.
+
+Contém:
+
+* Drivers
+* Scripts
+* Utilitários
+
+Fluxo:
+
+```mermaid
+flowchart TD
+    Kernel --> Initramfs
+    Initramfs --> DetectaDisco
+    DetectaDisco --> RootFS
+```
+
+---
+
+# Gerenciamento de Memória
+
+## Memória Virtual
+
+Programas não enxergam a memória física diretamente.
+
+```text
+Memória Virtual
+       ↓
+MMU
+       ↓
+Memória Física
+```
+
+---
+
+## MMU
+
+Memory Management Unit
+
+Responsável por:
+
+* Tradução de endereços
+* Proteção de memória
 * Paginação
-* Memória virtual
-* Cache de páginas
-* Slab Allocator
-
-## Scheduler
-
-Inicialização do escalonador responsável por:
-
-* Criar processos
-* Distribuir carga entre CPUs
-* Controlar prioridades
-
-## Drivers Integrados
-
-O kernel inicializa drivers compilados diretamente:
-
-* ACPI
-* USB
-* PCI
-* NVMe
-* SATA
-* EXT4
-* FAT32
 
 ---
 
-# 4. Initramfs
+## Paginação
 
-O Initramfs é um pequeno sistema Linux carregado inteiramente na memória RAM.
+Cada processo possui:
 
-Sua função é preparar o ambiente antes da montagem do sistema principal.
+* Espaço virtual próprio
+* Tabelas de páginas
 
-## Estrutura
+Benefícios:
 
-```text
-/bin
-/sbin
-/lib
-/usr
-/init
-```
-
-## Componentes
-
-### BusyBox
-
-Fornece ferramentas essenciais:
-
-```text
-mount
-sh
-cp
-mv
-cat
-```
-
-### udev
-
-Responsável por detectar dispositivos dinamicamente.
-
-### cryptsetup
-
-Utilizado para descriptografar partições LUKS.
-
-### lvm2
-
-Gerenciamento de volumes lógicos.
-
-### mdadm
-
-Gerenciamento de RAID.
+* Segurança
+* Isolamento
+* Estabilidade
 
 ---
 
-# 5. Descoberta do Sistema Raiz
+# Root Filesystem
 
-O initramfs localiza a partição principal.
+Após localizar o sistema:
 
-Exemplo:
-
-```text
-/dev/nvme0n1p2
-```
-
-Após localizar:
-
-```text
-mount /dev/nvme0n1p2 /newroot
-```
-
-Em seguida ocorre:
-
-```text
+```bash
 switch_root
-```
-
-O sistema temporário é descartado e o sistema real assume o controle.
-
----
-
-# 6. Processo PID 1
-
-O primeiro processo criado pelo kernel recebe PID 1.
-
-Exemplo:
-
-```text
-/sbin/init
 ```
 
 ou
 
-```text
-/usr/lib/systemd/systemd
+```bash
+pivot_root
 ```
 
-## Responsabilidades
-
-* Inicializar serviços
-* Gerenciar processos
-* Monitorar falhas
-* Encerrar serviços
+O initramfs entrega o controle ao sistema principal.
 
 ---
 
-# 7. Montagem dos Pseudo Filesystems
+# PID 1
 
-Antes da inicialização dos serviços o sistema monta:
+Primeiro processo do Linux.
+
+Normalmente:
 
 ```text
-/proc
-/sys
-/dev
-/run
+systemd
 ```
 
-## /proc
-
-Informações de processos e kernel.
-
-## /sys
-
-Interface entre kernel e espaço de usuário.
-
-## /dev
-
-Dispositivos do sistema.
-
-## /run
-
-Arquivos temporários em memória.
-
----
-
-# 8. Inicialização dos Serviços
-
-Serviços essenciais são carregados.
-
-## udev
-
-Gerenciamento de dispositivos.
-
-## dbus
-
-Comunicação entre processos.
-
-## NetworkManager
-
-Gerenciamento de rede.
-
-## cron
-
-Execução de tarefas agendadas.
-
-## sshd
-
-Acesso remoto.
-
-## journald
-
-Coleta de logs.
-
----
-
-# 9. Sistema de Pacotes
-
-O gerenciador de pacotes mantém o sistema atualizado.
-
-## Componentes
-
-### Repositórios
-
-Servidores contendo pacotes.
-
-### Banco de Dados Local
-
-Registro dos pacotes instalados.
-
-### Resolução de Dependências
-
-Determina bibliotecas necessárias.
-
-### Verificação de Assinaturas
-
-Validação criptográfica dos pacotes.
-
-### Instalação
-
-Extração de arquivos:
+PID:
 
 ```text
-/usr/bin
-/usr/lib
-/etc
+1
 ```
 
 ---
 
-# 10. Login Manager
+# Systemd
 
-Após a inicialização dos serviços o sistema apresenta a tela de login.
+Responsável por:
+
+* Inicialização
+* Serviços
+* Rede
+* Logs
+* Login
+
+Fluxo:
+
+```mermaid
+flowchart TD
+    systemd --> udev
+    systemd --> NetworkManager
+    systemd --> DisplayManager
+```
+
+---
+
+# Udev
+
+Gerencia dispositivos.
+
+Exemplo:
+
+```text
+Mouse conectado
+↓
+Kernel gera evento
+↓
+udev processa
+↓
+/dev/input/*
+```
+
+---
+
+# Sistema de Arquivos
+
+Estrutura Linux:
+
+```text
+/
+├── bin
+├── boot
+├── dev
+├── etc
+├── home
+├── lib
+├── proc
+├── sys
+├── tmp
+├── usr
+└── var
+```
+
+---
+
+# ProcFS
+
+Sistema virtual.
 
 Exemplos:
 
 ```text
-greetd
-sddm
-gdm
-lightdm
+/proc/cpuinfo
+/proc/meminfo
 ```
+
+Gerado dinamicamente pelo kernel.
+
+---
+
+# SysFS
+
+Representação dos dispositivos.
+
+```text
+/sys
+```
+
+---
+
+# Processos
+
+Quando um programa é executado:
+
+```mermaid
+flowchart TD
+    Usuario --> Executavel
+    Executavel --> Kernel
+    Kernel --> Processo
+```
+
+---
+
+# Chamadas de Sistema
+
+Aplicações acessam recursos através de Syscalls.
+
+Exemplos:
+
+```c
+open()
+read()
+write()
+mmap()
+fork()
+execve()
+```
+
+---
+
+# Escalonador
+
+Alterna entre processos.
+
+```text
+Processo A
+↓
+Processo B
+↓
+Processo C
+↓
+Processo A
+```
+
+Chamado de:
+
+```text
+Context Switch
+```
+
+---
+
+# Interrupções
+
+Eventos externos que interrompem a CPU.
+
+Exemplo:
+
+```text
+Tecla pressionada
+↓
+Controlador
+↓
+Interrupção
+↓
+CPU
+```
+
+---
+
+# DMA
+
+Direct Memory Access
+
+Permite transferência direta:
+
+```text
+SSD
+↓
+RAM
+```
+
+Sem participação constante da CPU.
+
+---
+
+# Ambiente Gráfico
+
+## Display Manager
+
+Responsável pela tela de login.
+
+Exemplos:
+
+* GDM
+* SDDM
+* LightDM
+
+---
+
+## Servidor Gráfico
+
+### X11
+
+Sistema tradicional.
+
+### Wayland
+
+Sistema moderno.
+
+---
+
+## Compositor
+
+Exemplos:
+
+* Hyprland
+* Sway
+* KWin
+* Mutter
 
 Funções:
 
-* Autenticação
-* Criação de sessão
-* Inicialização gráfica
-
----
-
-# 11. Wayland
-
-Wayland é o protocolo gráfico moderno responsável pela comunicação entre aplicações e compositor.
-
-## Responsabilidades
-
-* Renderização
-* Entrada de teclado
-* Entrada de mouse
-* Gerenciamento de janelas
-
----
-
-# 12. Hyprland
-
-O Hyprland atua como compositor Wayland.
-
-## Recursos
-
-* Gerenciamento de janelas
-* Workspaces dinâmicos
+* Janelas
 * Animações
-* Atalhos de teclado
-* Controle de monitores
+* Transparência
 
-## Componentes Associados
+---
 
-```text
-waybar
-rofi
-dunst
-swww
-kitty
+# Fluxo Completo da Inicialização
+
+```mermaid
+flowchart TD
+    Power[Botão Power]
+    Fonte[Fonte ATX]
+    CPU[CPU Reset]
+    UEFI[UEFI]
+    POST[POST]
+    RAM[Treinamento RAM]
+    ACPI[ACPI]
+    SSD[Detecta SSD]
+    BOOT[Bootloader]
+    KERNEL[Kernel Linux]
+    INITRAMFS[Initramfs]
+    ROOTFS[Root Filesystem]
+    SYSTEMD[systemd PID 1]
+    SERVICOS[Serviços]
+    DM[Display Manager]
+    WAYLAND[Wayland/X11]
+    DESKTOP[Desktop]
+
+    Power --> Fonte
+    Fonte --> CPU
+    CPU --> UEFI
+    UEFI --> POST
+    POST --> RAM
+    RAM --> ACPI
+    ACPI --> SSD
+    SSD --> BOOT
+    BOOT --> KERNEL
+    KERNEL --> INITRAMFS
+    INITRAMFS --> ROOTFS
+    ROOTFS --> SYSTEMD
+    SYSTEMD --> SERVICOS
+    SERVICOS --> DM
+    DM --> WAYLAND
+    WAYLAND --> DESKTOP
 ```
 
 ---
 
-# 13. Sessão do Usuário
+# Conclusão
 
-Após a autenticação são iniciados:
+Desde o momento em que o botão Power é pressionado até a abertura de uma aplicação gráfica, milhões de operações são realizadas.
+
+O fluxo geral é:
 
 ```text
-Shell
+Energia
 ↓
-Variáveis de Ambiente
+UEFI
 ↓
-Aplicações de Inicialização
+POST
 ↓
-Waybar
+Bootloader
 ↓
-Serviços do Usuário
+Kernel
+↓
+Initramfs
+↓
+Root Filesystem
+↓
+systemd
+↓
+Serviços
+↓
+Wayland/X11
+↓
+Desktop
 ↓
 Aplicações
 ```
 
-O sistema está totalmente operacional neste estágio.
-
-```mermaid
-flowchart TD
-
-    A[BIOS / UEFI] --> B[POST - Power On Self Test]
-
-    B --> C[Detecção de Hardware]
-    C --> D[Seleção do Dispositivo de Boot]
-
-    D --> E[GRUB Bootloader]
-
-    E --> F[Carregamento do Kernel Linux]
-    E --> G[Carregamento do Initramfs]
-
-    F --> H[Inicialização da Memória]
-    H --> I[Configuração de Paginação]
-    I --> J[Inicialização do Scheduler]
-    J --> K[Inicialização dos Drivers Integrados]
-
-    G --> L[Initramfs em RAM]
-
-    L --> M[Detecção de Hardware]
-    M --> N[Carregamento de Módulos do Kernel]
-    N --> O[Detecção de Sistemas de Arquivos]
-    O --> P[Montagem do RootFS Temporário]
-
-    P --> Q[Localização da Partição Root]
-    Q --> R[Montagem do Sistema Real]
-
-    R --> S[Switch Root]
-
-    S --> T[Processo PID 1]
-
-    T --> U[Sistema de Inicialização]
-
-    U --> V[Montagem de /proc]
-    U --> W[Montagem de /sys]
-    U --> X[Montagem de /dev]
-    U --> Y[Montagem de /run]
-
-    V --> Z[Inicialização de Serviços]
-    W --> Z
-    X --> Z
-    Y --> Z
-
-    Z --> AA[udev]
-    Z --> AB[Network Manager]
-    Z --> AC[Gerenciador de Logs]
-    Z --> AD[Gerenciador de Sessão]
-
-    AA --> AE[Detecção Dinâmica de Dispositivos]
-
-    AB --> AF[Configuração de Rede]
-
-    AC --> AG[Logs do Sistema]
-
-    AD --> AH[Login Manager]
-
-    AH --> AI[Login do Usuário]
-
-    AI --> AJ[Shell]
-    AI --> AK[Ambiente Gráfico]
-
-    AK --> AL[Wayland]
-    AL --> AM[Hyprland]
-
-    AM --> AN[Aplicações]
-```
+Cada etapa depende da anterior, formando uma cadeia complexa que transforma energia elétrica em processamento de informação.
