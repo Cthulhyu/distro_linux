@@ -1,10 +1,10 @@
-# Funcionamento Completo de um Computador
+# Funcionamento Completo de um Computador <div align="center">(>‿◠)✌</div>
 
 ## Do Hardware ao Sistema Operacional
 
 ---
 
-# Sumário
+# <div align="center">Sumário</div>
 
 1. Introdução
 2. Arquitetura Geral
@@ -30,7 +30,7 @@
 
 ---
 
-# Introdução
+# <div align="center">Introdução</div>
 
 Um computador é uma máquina eletrônica capaz de receber dados, processá-los, armazená-los e produzir resultados.
 
@@ -59,7 +59,7 @@ Parte lógica do sistema:
 
 ---
 
-# Arquitetura Geral
+# <div align="center">Arquitetura Geral</div>
 
 ```mermaid
 flowchart TD
@@ -83,7 +83,7 @@ flowchart TD
 
 ---
 
-# Hardware
+# <div align="center">Hardware</div>
 
 ## Placa-mãe
 
@@ -259,7 +259,7 @@ Utilizado para:
 
 ---
 
-# Processo de Inicialização
+# <div align="center">Processo de Inicialização</div>
 
 ## Energia
 
@@ -291,7 +291,7 @@ Fornecendo:
 
 ---
 
-# Firmware
+# <div align="center">Firmware</div>
 
 ## BIOS
 
@@ -310,7 +310,7 @@ Responsável por:
 
 ---
 
-# POST
+# <div align="center">POST</div>
 
 Power-On Self Test
 
@@ -330,7 +330,7 @@ flowchart TD
 
 ---
 
-# Treinamento da Memória
+# <div align="center">Treinamento da Memória</div>
 
 O controlador de memória descobre:
 
@@ -347,7 +347,7 @@ CL30
 
 ---
 
-# Seleção do Dispositivo de Boot
+# <div align="center">Seleção do Dispositivo de Boot</div>
 
 UEFI procura dispositivos:
 
@@ -358,7 +358,7 @@ UEFI procura dispositivos:
 
 ---
 
-# Partição EFI
+# <div align="center">Partição EFI</div>
 
 Estrutura típica:
 
@@ -378,7 +378,7 @@ FAT32
 
 ---
 
-# Bootloader
+# <div align="center">Bootloader</div>
 
 Exemplos:
 
@@ -394,7 +394,7 @@ Funções:
 
 ---
 
-# Kernel Linux
+# <div align="center">Kernel Linux</div>
 
 Arquivo típico:
 
@@ -412,7 +412,7 @@ Responsabilidades:
 
 ---
 
-# Initramfs
+# <div align="center">Initramfs</div>
 
 Sistema Linux temporário carregado na RAM.
 
@@ -433,7 +433,7 @@ flowchart TD
 
 ---
 
-# Gerenciamento de Memória
+# <div align="center">Gerenciamento de Memória</div>
 
 ## Memória Virtual
 
@@ -476,7 +476,7 @@ Benefícios:
 
 ---
 
-# Root Filesystem
+# <div align="center">Root Filesystem</div>
 
 Após localizar o sistema:
 
@@ -494,7 +494,7 @@ O initramfs entrega o controle ao sistema principal.
 
 ---
 
-# PID 1
+# <div align="center">PID 1</div>
 
 Primeiro processo do Linux.
 
@@ -512,7 +512,7 @@ PID:
 
 ---
 
-# Systemd
+# <div align="center">Systemd</div>
 
 Responsável por:
 
@@ -533,7 +533,7 @@ flowchart TD
 
 ---
 
-# Udev
+# <div align="center">Udev</div>
 
 Gerencia dispositivos.
 
@@ -551,7 +551,7 @@ udev processa
 
 ---
 
-# Sistema de Arquivos
+# <div align="center">Sistema de Arquivos</div>
 
 Estrutura Linux:
 
@@ -572,7 +572,7 @@ Estrutura Linux:
 
 ---
 
-# ProcFS
+# <div align="center">ProcFS</div>
 
 Sistema virtual.
 
@@ -587,7 +587,7 @@ Gerado dinamicamente pelo kernel.
 
 ---
 
-# SysFS
+# <div align="center">SysFS</div>
 
 Representação dos dispositivos.
 
@@ -597,7 +597,7 @@ Representação dos dispositivos.
 
 ---
 
-# Processos
+# <div align="center">Processos</div>
 
 Quando um programa é executado:
 
@@ -610,7 +610,7 @@ flowchart TD
 
 ---
 
-# Chamadas de Sistema
+# <div align="center">Chamadas de Sistema</div>
 
 Aplicações acessam recursos através de Syscalls.
 
@@ -627,7 +627,7 @@ execve()
 
 ---
 
-# Escalonador
+# <div align="center">Escalonador</div>
 
 Alterna entre processos.
 
@@ -649,7 +649,7 @@ Context Switch
 
 ---
 
-# Interrupções
+# <div align="center">Interrupções</div>
 
 Eventos externos que interrompem a CPU.
 
@@ -667,7 +667,7 @@ CPU
 
 ---
 
-# DMA
+# <div align="center">DMA</div>
 
 Direct Memory Access
 
@@ -683,7 +683,7 @@ Sem participação constante da CPU.
 
 ---
 
-# Ambiente Gráfico
+# <div align="center">Ambiente Gráfico</div>
 
 ## Display Manager
 
@@ -726,7 +726,7 @@ Funções:
 
 ---
 
-# Fluxo Completo da Inicialização
+# <div align="center">Fluxo Completo da Inicialização</div>
 
 ```mermaid
 flowchart TD
@@ -768,7 +768,7 @@ flowchart TD
 
 ---
 
-# Conclusão
+# <div align="center">Conclusão</div>
 
 Desde o momento em que o botão Power é pressionado até a abertura de uma aplicação gráfica, milhões de operações são realizadas.
 
