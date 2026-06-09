@@ -1,6 +1,6 @@
-# Funcionamento Completo de um Computador <div align="center">(>‿◠)✌</div>
+# <div align="center">Funcionamento Completo de um Computador</div> <div align="center">(>‿◠)✌</div>
 
-## Do Hardware ao Sistema Operacional
+## <div align="center">Hardware ao Sistema Operacional</div>
 
 ---
 
